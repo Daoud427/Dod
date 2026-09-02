@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ابحث بالبريد الإلكتروني</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+  h1 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 24px;
+  }
+  input[type="email"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: center;
+    direction: ltr;
+  }
+  input[type="email"]:focus {
+    border-color: #764ba2;
+  }
+  button {
+    margin-top: 16px;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  button:hover { opacity: 0.9; }
+  #result {
+    margin-top: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    min-height: 30px;
+    padding: 14px;
+    border-radius: 10px;
+    display: none;
+  }
+  #result.found {
+    display: block;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 2px solid #a5d6a7;
+  }
+  #result.not-found {
+    display: block;
+    background: #ffebee;
+    color: #c62828;
+    border: 2px solid #ef9a9a;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>يرجى إدخال بريدك الإلكتروني</h1>
+  <input type="email" id="emailInput" placeholder="example@email.com" required>
+  <button onclick="showWord()">عرض</button>
+  <div id="result"></div>
+</div>
+
+<script>
+  // ==============================================
+  // عدّل هنا: ضع كل بريد إلكتروني والكلمة المقابلة له
+  // ==============================================
+  const emailWordMap = {
+   "abdoabdallah464@gmail.com":  "!#hoShGV$2",
+"mostafaibrahim1410@gmail.com":  "!A8Q5G$ls3",
+"‪asa.shaker101@gmail.com‬‏":  "#38y&CYc3n",
+"Hero201258@gmail.com":  "#4r%yE5K5A",
+"ahmdalsdny00@gmail.com":  "#C4Zlt$78i",
+"ahmed.said66000237@gmail.com":  "#E2tVLvP!8",
+"th811625@gmail.com‬‏":  "#j5k3fN9KH",
+"hhhhkkmm445@gmail.com":  "#UdD*Tz0VH",
+"‪mohameehelal3@gmail.com‬‏":  "$0$PDE2d#^",
+"ecosayed@Gmail.com":  "&xEplcA2Bd",
+"abdallasalahee@gmail.com":  "*h!t9l1$Nf",
+"wghonem67@gmail.com":  "*MyZb$PqU4",
+"ahmadashrafa774@gmail.com":  "@^*$T7sp$L",
+"himamanso821@gmail.com":  "@54Ma23rIV",
+"adbelrahmanelshimi@gmail.com":  "@6yHpN%BuZ",
+"mostafastar9665@gmail.com":  "@c96sqREl4",
+"fg4216189@gmail.com‬‏":  "@Tr%xg9UKh",
+"zhranahmd326@gmail.com":  "^NBpm4XRq1",
+"ahmed0948949@gmail.com":  "0Meo^7UVf*",
+"oa054245@gmail.com":  "0SgTsUml%&",
+"saidmohamed3mm7@gmail.com.com":  "22OIHrf^zL",
+"abdallahamed01224@gmail.com":  "2dni#^%sN0",
+"k.mohamed.tabl@gmail.com":  "2E797fLG3#",
+"mahmoudramadanz071@gmail.com":  "53uXOxg6F$",
+"mokhtarshenoda@gmail.com":  "6%pCYO8C6y",
+"adham.eltahawy123321@gmail.com":  "66^c1Ha&82",
+"ahmedabosoliman198@gmail.com":  "6dLXH&^n%E",
+"eelkarf@gmail.com":  "7nu!@A9!FM",
+"Foxahmed528@gmail.com":  "8d9#Topb7X",
+"free2eslam2899@gmail.com":  "8H#M8gsH!f",
+"madkshk8@gmail.com‏":  "8r5yyK*HGe",
+"redamohammedeg00@gmail.com":  "8v*&W3pVSy",
+"sd7586659@gmail.com":  "8zNFL&3@rY",
+"mohmedamed660@gmail.com":  "a^luuU0bPC",
+"hanyhesham9565@gmail.com":  "bC95#rHub#",
+"ahmeddapoor00@gmail.com":  "BCt7xPn4@w",
+"ahmedrisha883@gmail.com":  "Cen&6VnB5$",
+"Elhosary303@gmail.com":  "cLL#j$J3nR",
+"mahmoudatef6612@gmail.com":  "d*XxY1AbYS",
+"mohamedaidia375@gmail.com":  "E5$bDe4G&f",
+"super40nova@gmail.com":  "EAfmR9c^R1",
+"waelhanymohamed@gmail.com":  "elO26EGIT!",
+"mohamednasser72a@gmail.com":  "FlUyO1^%WR",
+"ahmedsaied1541990@gmail.com":  "fTd*xbTR2e",
+"dodykhairy20@gmail.com":  "G&qWfGxfr7",
+"frankshetin@gmail.com":  "gUtUR!6XMn",
+"mohamedhamdy231@icloud.com":  "H3BjnVR^XR",
+"helmy1991122@gmail.com":  "hA%O75zZ@z",
+"57hvcvuf8@gmail.com":  "hWXi5iv&45",
+"mohammedabdelnabi81@gmail.com":  "iQ64pS5kl!",
+"Salemsamir744@gmail.com":  "K1l9J%4WA$",
+"mohamedatef971997@gmail.com":  "ketQ1s@^nt",
+"omarabdalkader777@gmail.com":  "L1f#m@y!j$",
+"abdoeslam20028@gmail.com":  "l74o3!7YFX",
+"aliabdelnabe09@gmail.com":  "lc&G3O6NIc",
+"mo403438@gmail.com":  "Ly7s1J@Ym4",
+"saidayman118@gmail.com":  "lYq1y6KA*N",
+"mahmoudkhames619@gmail.com":  "N&G3b$!q13",
+"ahmedatiaa879@gmail.com":  "n1*26LdudU",
+"mohamedtaherhalim72@gmail.com":  "O*h6icj%hw",
+"5050waleedahmed@gmail.com":  "Om9C6&iPt4",
+"aylenhossam@gmail.com":  "opB%zve7PC",
+"yasserelartist@gmail.com":  "opJhF7$7C*",
+"abdoahmad01100@gmail.com":  "OQVH$02gsu",
+"Mahmouddoda258f@gamil.com":  "pbxCV*#B4q",
+"mohammedshehab4090@gmail.com":  "PHBB7c*6PM",
+"boody6196@gmail.com":  "R%YO@t4rxD",
+"mangofahdmuhammadabdulazimomar@gmail.com":  "R2o$T61wI^",
+"ms3672669@gmail.com":  "rc$wiD&j87",
+"mahmoudelshbrway@gmail.com":  "rm0!Z6kAX#",
+"elsaruaosye@gmail.com":  "ROCly3Q@KD",
+"ahmedaboaziz301@gmail.com":  "RWj01##Vib",
+"abderhmanside@gmail.com":  "S^Md!7r1&G",
+"Goregelpop@gmail.com":  "sOV5YH$0kS",
+"amjdy7052@gmail.com":  "T0Q@cdjla1",
+"Sayedbondok275@gmail.com":  "t9M3Ip2e*O",
+"mohamedkhaledmka1998@gmail.com":  "uhQfqfA%8h",
+"farismousa45@gmail.com":  "v@Q%l8g^Gq",
+"mahmoud.mahmoud200@icloud.com":  "vk5O%@mU%r",
+"abdoxxh1@gamil.com":  "vMBHLy2F&z",
+"almajicomohamed5678@gmail.com":  "vT0^Bd4^4y",
+"lordmagiko2016@gmail.com":  "vwPuEx1&T6",
+"spy01027406735@gmail.com":  "w44E%4XpdB",
+"ahmedhamdiop@icloud.com":  "WyK53C11$m",
+"aalliiaa77mmeedd@gmail.com":  "x%bd%Y6ruH",
+"alshafyyahmd383@gmail.com":  "X7&lVZfO1n",
+"farhatabdelrahman82@gmail.com":  "xLX!97KsaM",
+"ali.soliman19@icloud.com":  "Xvl2oh!Zt6",
+"fathyabdelmohssen33@gmail.com":  "Z62XoQs!Nr",
+"lam419472@gmail.com":  "ZQI2a^ukqy",
+"eslamy1010@gmail.com":  "zv#3f@RDvk",
+
+  };
+  // ==============================================
+
+  function showWord() {
+    const emailInput = document.getElementById('emailInput');
+    const email = emailInput.value.trim().toLowerCase();
+    const resultDiv = document.getElementById('result');
+
+    // نبحث بدون حساسية لحالة الأحرف
+    const match = Object.keys(emailWordMap).find(
+      key => key.toLowerCase() === email
+    );
+
+    if (match) {
+      resultDiv.textContent = emailWordMap[match];
+      resultDiv.className = 'found';
+    } else {
+      resultDiv.textContent = 'لم يتم تفعيل هذا البريد الالكترونى على برنامج البصمة ZenHr ، يرجى الانتظار ليوم أخر';
+      resultDiv.className = 'not-found';
+    }
+  }
+
+  // السماح بالضغط على Enter
+  document.getElementById('emailInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') showWord();
+  });
+</script>
+
+</body>
+</html>
