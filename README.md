@@ -1,4 +1,3 @@
-# Dod[index.html.html](https://github.com/user-attachments/files/31736669/index.html.html)
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
